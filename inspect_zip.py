@@ -115,7 +115,9 @@ with open(z, 'rb') as f:
 
 		elif (bytes.endswith(FILE_DATA_DESC_SIG)):
 			print '--- Found file descriptor'
-			if (int(hexlistToString(loc_file_flags)[2]) & 1 == 0):
+			# File data descriptor should only be present if bit 3 of the flags is set
+			# Convert flags to binary, reverse them to change from little-endian, and check the bit in the third index
+			if (int(bin(int(hexlistToString(loc_file_flags), 16))[2:].zfill(16)[::-1][3]) & 1 == 0):
 				print '> Error: Bit 3 of bit flags should be set'
 			bytes = ''
 
